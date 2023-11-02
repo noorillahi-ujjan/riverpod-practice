@@ -37,36 +37,91 @@ import 'package:riverpod_practice/second_screen.dart';
 
 //************* if the widget is StatefullWidget */
 
-final nameProvider = Provider<String>((ref) => "Noor ");
+// final nameProvider = Provider<String>((ref) => "Noor ");
+//
+// void main() {
+//   runApp(const ProviderScope(child: MyApp()));
+// }
+//
+// class MyApp extends ConsumerStatefulWidget {
+//   const MyApp({super.key});
+//
+//   @override
+//   ConsumerState<MyApp> createState() => _MyAppState();
+// }
+//
+// class _MyAppState extends ConsumerState<MyApp> {
+//   @override
+//   Widget build(
+//     BuildContext context,
+//   ) {
+//     final name = ref.watch(nameProvider);
+//     return MaterialApp(
+//         theme: ThemeData(
+//           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+//           useMaterial3: true,
+//         ),
+//         home:
+//             // SecondScreen(),
+//             Center(
+//           child: Container(
+//             child: Text("Main Screen $name"),
+//           ),
+//         ));
+//   }
+// }
+
+
+//*************************** StateProvider
+
+
+final nameProvider =  StateProvider<String?>((ref) => null);
 
 void main() {
   runApp(const ProviderScope(child: MyApp()));
 }
 
-class MyApp extends ConsumerStatefulWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
-  @override
-  ConsumerState<MyApp> createState() => _MyAppState();
-}
+  void onSubmitted(WidgetRef ref, String value) {
+    final name = ref.read(nameProvider.notifier).state = value;
 
-class _MyAppState extends ConsumerState<MyApp> {
+  }
+
+
+
+
   @override
   Widget build(
-    BuildContext context,
+    BuildContext context, WidgetRef ref,
   ) {
-    final name = ref.watch(nameProvider);
+    final name = ref.watch(nameProvider) ?? "";
     return MaterialApp(
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-          useMaterial3: true,
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        useMaterial3: true,
+      ),
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text(name),
         ),
-        home:
-            // SecondScreen(),
-            Center(
-          child: Container(
-            child: Text("Main Screen $name"),
-          ),
-        ));
+        body: Center(
+          child:
+            Column(
+              children: [
+                TextField(
+                  onSubmitted: (value) => onSubmitted(ref, value) ,
+                ),
+                Center(
+                  child: Text(name),
+                )
+              ]
+            ),
+
+        ),
+
+      ),
+    );
   }
 }
